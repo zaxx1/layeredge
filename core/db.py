@@ -60,9 +60,3 @@ async def update_points(wallet_address: str, new_points: int):
     async with aiosqlite.connect(DATABASE_PATH) as db:
         await db.execute("UPDATE accounts SET points = ? WHERE wallet_address = ?", (new_points, wallet_address))
         await db.commit()
-
-async def main():
-    # print(await get_accounts())
-    pass
-
-asyncio.run(main())

@@ -1,13 +1,12 @@
 import asyncio
 from random import randint
 
-from core.reqs import get_node_status, get_points, start_node, stop_node, check_in
+from core.reqs import get_node_status, start_node, stop_node, check_in, get_ref_code
 from utils.file_utils import read_proxies, read_farm, write_filed_account
 from utils.private_key_to_wallet import private_key_to_wallet
-from configs.config import GET_BALANCE
 from utils.log_utils import logger
-from account import Account
-import db
+from core.account import Account
+from core import db
 
 PRIVATE_KEYS_TO_FARM = read_farm()
 PROXIES = read_proxies()
@@ -19,7 +18,7 @@ async def process_account(private_key: str, proxy):
         logger.error(f"{private_key} | Account doesn't register!")
         return
 
-    account = Account(private_key, ua)
+    account = Account(private_key, "")
 
     logger.success(f"{account.wallet_address} | Starting account..")
     await asyncio.sleep(randint(0, 12 * 60 * 60))
@@ -32,9 +31,6 @@ async def process_account(private_key: str, proxy):
             await asyncio.sleep(randint(10, 30))
         await start_node(account, proxy)
         await asyncio.sleep(randint(10, 30))
-        if GET_BALANCE:
-            await db.update_points(account.wallet_address, await get_points(account, proxy))
-            logger.info(f"Total points: {(await db.get_total_points())[0]}")
         await asyncio.sleep(randint(10 * 60 * 60, 12 * 60 * 60))
 
 async def start():

@@ -1,5 +1,5 @@
-REGISTER_MODE = True
-FARM_MODE = False
+REGISTER_MODE = False
+FARM_MODE = True
 
 # ┏━━━━━━━━━━━━━━━━━━━━━┓
 # ┃  REFERRAL TIMING    ┃

@@ -9,7 +9,7 @@ from core.account import Account
 from utils.file_utils import write_success_account, write_filed_account
 from utils.log_utils import logger
 from fake_useragent import UserAgent
-import db
+from core import db
 
 base_headers = {
     'Accept': "application/json, text/plain, */*",
@@ -135,6 +135,25 @@ proxy: str
 
     if response_status < 300:
         return response_json['data']["nodePoints"]
+    else:
+        return None
+
+async def get_ref_code(
+account: Account,
+proxy: str
+) -> int | None:
+    url = f"https://referralapi.layeredge.io/api/referral/wallet-details/{account.wallet_address}"
+
+    response_status, response_json = await make_request(
+        'GET',
+        url,
+        proxy,
+        account.ua,
+        wallet_address=account.wallet_address
+    )
+
+    if response_status < 300:
+        return response_json['data']["referralCode"]
     else:
         return None
 
