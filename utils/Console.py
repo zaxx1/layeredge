@@ -23,6 +23,8 @@ class Console:
         color = 'green3'
         self.rich_console.print(f"[{color}]github:   github.com/Dmkls[/{color}]")
         self.rich_console.print(f"[{color}]telegram: t.me/MagniFier01Chin[/{color}]")
+        print()
+        print()
 
     def build(self) -> None:
         self.show_dev_info()

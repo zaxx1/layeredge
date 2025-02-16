@@ -7,5 +7,9 @@ IF EXIST ".\.venv" (
 	python -m venv .venv
 )
 
+IF NOT EXIST ".\data" (
+	mkdir "data"
+)
+
 pip install -r requirements.txt
 pause

@@ -33,8 +33,10 @@ async def get_accounts():
 async def get_ua(wallet_address: str):
     async with aiosqlite.connect(DATABASE_PATH) as db:
         async with db.execute("SELECT user_agent FROM accounts WHERE wallet_address = ?", (wallet_address,)) as cursor:
-            if len(await cursor.fetchall()):
-                return (await cursor.fetchone())[0]
+            res = await cursor.fetchall()
+            print(res[0][0])
+            if len(res):
+                return res[0][0]
             else:
                 return None
 

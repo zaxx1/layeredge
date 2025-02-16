@@ -18,8 +18,7 @@ async def process_account(private_key: str, proxy):
         logger.error(f"{private_key} | Account doesn't register!")
         return
 
-    account = Account(private_key, "")
-
+    account = Account(private_key, ua)
     logger.success(f"{account.wallet_address} | Starting account..")
     await asyncio.sleep(randint(0, 12 * 60 * 60))
 
