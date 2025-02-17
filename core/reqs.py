@@ -7,9 +7,11 @@ from eth_account.messages import encode_defunct
 
 from core.account import Account
 from utils.file_utils import write_success_account, write_failed_account
+from core.farm import process_account
 from utils.log_utils import logger
 from fake_useragent import UserAgent
 from core import db
+
 
 base_headers = {
     'Accept': "application/json, text/plain, */*",
@@ -95,7 +97,8 @@ ref_code: str
         write_failed_account(private_key)
         if 'message' in response_json:
             if response_json['message'] == "wallet address already registered":
-                logger.error(f"{wallet_address} | Wallet already registered")
+                logger.success(f"{wallet_address} | Wallet already registered, starting farm..")
+                return True
             elif response_json['message'] == "invalid invite code":
                 logger.error(f"{wallet_address} | Invalid invite code: {ref_code}")
         else:
