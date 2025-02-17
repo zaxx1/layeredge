@@ -215,7 +215,9 @@ async def stop_node(account: Account, proxy):
         if response_status == 404:
             if 'message' in response_json:
                 if 'no node running' in response_json['message']:
-                    logger.warning(f"{account.wallet_address} | Node is not running")
+                    # node is not running
+                    pass
+                    # logger.warning(f"{account.wallet_address} | Node is not running")
             else:
                 logger.error(f"{account.wallet_address} | Error when stopping node")
         return False
