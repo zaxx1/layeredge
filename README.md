@@ -1,7 +1,8 @@
 # layeredge-auto
 Autofarm layeredge node testnet
 
-![image](https://github.com/user-attachments/assets/8b0e8f7c-a2bf-4e3c-94ee-2ab42e877d26)
+![photo_2025-02-16_21-21-21](https://github.com/user-attachments/assets/8e1be1e6-01e7-43a2-aec4-055cf8b704ce)
+
 
 Quick start
 
