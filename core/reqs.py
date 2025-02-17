@@ -7,7 +7,6 @@ from eth_account.messages import encode_defunct
 
 from core.account import Account
 from utils.file_utils import write_success_account, write_failed_account
-from core.farm import process_account
 from utils.log_utils import logger
 from fake_useragent import UserAgent
 from core import db
