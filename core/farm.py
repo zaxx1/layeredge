@@ -2,7 +2,7 @@ import asyncio
 from random import randint
 
 from core.reqs import start_node, stop_node, check_in
-from utils.file_utils import read_proxies, read_farm, write_filed_account
+from utils.file_utils import read_proxies, read_farm, write_failed_account
 from utils.private_key_to_wallet import private_key_to_wallet
 from utils.log_utils import logger
 from core.account import Account
@@ -14,7 +14,7 @@ PROXIES = read_proxies()
 async def process_account(private_key: str, proxy):
     ua = await db.get_ua(private_key_to_wallet(private_key))
     if not ua:
-        write_filed_account(private_key)
+        write_failed_account(private_key)
         logger.error(f"{private_key} | Account doesn't register!")
         return
 

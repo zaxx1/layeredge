@@ -20,7 +20,7 @@ def read_proxies() -> list[str]:
 def read_refs() -> list[str]:
     return read_file(REFS_PATH)
 
-def write_filed_account(private_key: str):
+def write_failed_account(private_key: str):
     with open(FILED_PATH, 'a', encoding="utf-8") as f:
         f.write(f'{private_key}\n')
 
