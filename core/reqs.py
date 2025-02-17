@@ -48,12 +48,16 @@ timeout: int = 10
                     return status, response_json
             except ClientHttpProxyError:
                 logger.error(f"{wallet_address} | Bad proxy: {proxy}")
+                if _+1 == retries:
+                    return 400, {}
             except ClientResponseError:
                 try:
                     return status, response_json
                 except:
                     logger.error(f"{wallet_address} | request failed, attempt {_ + 1}/{retries}")
                     await asyncio.sleep(3, 10)
+                    if _ + 1 == retries:
+                        return 400, {}
             except TimeoutError:
                 logger.error(f"{wallet_address} | TimeoutError, attempt {_+1}/{retries}")
                 await asyncio.sleep(3, 10)
