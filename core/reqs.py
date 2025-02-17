@@ -6,7 +6,7 @@ from aiohttp import ClientHttpProxyError, ClientResponseError
 from eth_account.messages import encode_defunct
 
 from core.account import Account
-from utils.file_utils import write_success_account, write_filed_account
+from utils.file_utils import write_success_account, write_failed_account
 from utils.log_utils import logger
 from fake_useragent import UserAgent
 from core import db
@@ -92,7 +92,7 @@ ref_code: str
         logger.success(f"{wallet_address} | Successfully register account")
         return True
     else:
-        write_filed_account(private_key)
+        write_failed_account(private_key)
         if 'message' in response_json:
             if response_json['message'] == "wallet address already registered":
                 logger.error(f"{wallet_address} | Wallet already registered")
