@@ -7,6 +7,7 @@ from eth_account.messages import encode_defunct
 
 from core.account import Account
 from utils.file_utils import write_success_account, write_failed_account
+from configs.config import SSL
 from utils.log_utils import logger
 from fake_useragent import UserAgent
 from core import db
@@ -40,7 +41,7 @@ timeout: int = 10
     for _ in range(retries):
         async with aiohttp.ClientSession() as session:
             try:
-                async with session.request(method, url, json=payload, headers=headers, proxy=proxy, timeout=timeout) as response:
+                async with session.request(method, url, json=payload, headers=headers, proxy=proxy, timeout=timeout, ssl=SSL) as response:
                     response_json = await response.json()
                     status = response.status
                     response.raise_for_status()
