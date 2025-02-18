@@ -2,13 +2,6 @@ REGISTER_MODE = False
 FARM_MODE = True
 
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━┓
-# ┃     GET REF CODES      ┃
-# ┗━━━━━━━━━━━━━━━━━━━━━━━━┛
-# The time that referrals will be registering
-
-GET_REFF_CODES = True
-
-# ┏━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃     REFERRAL TIMING    ┃
 # ┗━━━━━━━━━━━━━━━━━━━━━━━━┛
 # The time that referrals will be registering

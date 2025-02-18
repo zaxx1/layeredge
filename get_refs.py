@@ -1,5 +1,6 @@
 import asyncio
 from random import randint
+from fake_useragent import UserAgent
 
 from core.reqs import get_ref_code
 from utils.file_utils import read_proxies, read_wallets_to_get_refs, write_ref_codes, write_failed_account
@@ -7,7 +8,6 @@ from utils.private_key_to_wallet import private_key_to_wallet
 from utils.log_utils import logger
 from core.account import Account
 from core import db
-from fake_useragent import UserAgent
 
 PRIVATE_KEYS_TO_GET_REFS = read_wallets_to_get_refs()
 PROXIES = read_proxies()
@@ -38,3 +38,6 @@ async def start():
     for private_key, proxy in zip(PRIVATE_KEYS_TO_GET_REFS, PROXIES):
         tasks.append(asyncio.create_task(get_referral_code(private_key, proxy)))
     await asyncio.gather(*tasks)
+
+if __name__ == '__main__':
+    asyncio.run(start())
