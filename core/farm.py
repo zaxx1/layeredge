@@ -3,8 +3,9 @@ from random import randint
 from fake_useragent import UserAgent
 
 from core.reqs import start_node, stop_node, check_in
-from utils.file_utils import read_proxies, read_farm, write_failed_account
+from utils.file_utils import read_proxies, read_farm
 from utils.private_key_to_wallet import private_key_to_wallet
+from configs import config
 from utils.log_utils import logger
 from core.account import Account
 from core import db
@@ -21,7 +22,7 @@ async def process_account(private_key: str, proxy):
 
     account = Account(private_key, ua)
     logger.success(f"{account.wallet_address} | Starting account..")
-    await asyncio.sleep(randint(0, 12 * 60 * 60))
+    await asyncio.sleep(randint(config.MIN_DELAY_BEFORE_START, config.MAX_DELAY_BEFORE_START))
 
     while True:
         await check_in(account, proxy)
@@ -30,7 +31,7 @@ async def process_account(private_key: str, proxy):
         await asyncio.sleep(randint(10, 30))
         await start_node(account, proxy)
         await asyncio.sleep(randint(10, 30))
-        await asyncio.sleep(randint(10 * 60 * 60, 12 * 60 * 60))
+        await asyncio.sleep(randint(10 * 60 * 60, 13 * 60 * 60))
 
 async def start():
     tasks = []
