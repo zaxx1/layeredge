@@ -1,5 +1,5 @@
 from utils.log_utils import logger
-from utils.file_utils import read_register, read_refs, read_proxies
+from utils.file_utils import read_register, read_refs_codes, read_proxies
 from utils.private_key_to_wallet import private_key_to_wallet
 from random import choice
 from core.reqs import register_wallet
@@ -9,7 +9,7 @@ import asyncio
 from core.farm import process_account
 
 PRIVATE_KEYS_TO_REG = read_register()
-REFS = read_refs()
+REFS = read_refs_codes()
 PROXIES = read_proxies()
 TOTAL_WALLETS = len(PRIVATE_KEYS_TO_REG)
 

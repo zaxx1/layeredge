@@ -10,7 +10,9 @@ __pycache__/
 *.so
 
 # private files
-*.txt
+configs/*.txt
+results/*.txt
+
 
 # Distribution / packaging
 .Python

@@ -148,7 +148,7 @@ proxy: str
 async def get_ref_code(
 account: Account,
 proxy: str
-) -> int | None:
+) -> str | None:
     url = f"https://referralapi.layeredge.io/api/referral/wallet-details/{account.wallet_address}"
 
     response_status, response_json = await make_request(

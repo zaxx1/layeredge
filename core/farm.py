@@ -1,5 +1,6 @@
 import asyncio
 from random import randint
+from fake_useragent import UserAgent
 
 from core.reqs import start_node, stop_node, check_in
 from utils.file_utils import read_proxies, read_farm, write_failed_account
@@ -13,10 +14,10 @@ PROXIES = read_proxies()
 
 async def process_account(private_key: str, proxy):
     ua = await db.get_ua(private_key_to_wallet(private_key))
+
+    ua_faker = UserAgent()
     if not ua:
-        write_failed_account(private_key)
-        logger.error(f"{private_key} | Account doesn't register!")
-        return
+        ua = ua_faker.random
 
     account = Account(private_key, ua)
     logger.success(f"{account.wallet_address} | Starting account..")
