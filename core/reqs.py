@@ -1,5 +1,6 @@
 import asyncio
 import time
+from random import random, choice
 
 import aiohttp
 from aiohttp import ClientHttpProxyError, ClientResponseError
@@ -7,6 +8,7 @@ from eth_account.messages import encode_defunct
 
 from core.account import Account
 from utils.file_utils import write_success_account, write_failed_account
+from utils.file_utils import read_proxies
 from configs.config import SSL
 from utils.log_utils import logger
 from fake_useragent import UserAgent
@@ -19,6 +21,8 @@ base_headers = {
 }
 
 ua = UserAgent(os=["Windows", "Linux", "Ubuntu", "Mac OS X"])
+
+BAD_PROXIES = []
 
 
 async def make_request(
@@ -48,6 +52,10 @@ timeout: int = 10
                     return status, response_json
             except ClientHttpProxyError:
                 logger.error(f"{wallet_address} | Bad proxy: {proxy}")
+                if retries % _ == 1:
+                    proxies = read_proxies()
+                    proxy = choice(proxies[int(len(proxies)/1.5):])
+                    logger.error(f"{wallet_address} | Changed proxy: {proxy}")
                 if _+1 == retries:
                     return 400, {}
             except ClientResponseError:
