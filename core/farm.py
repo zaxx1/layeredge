@@ -12,11 +12,11 @@ from core import db
 
 PRIVATE_KEYS_TO_FARM = read_farm()
 PROXIES = read_proxies()
+ua_faker = UserAgent()
 
 async def process_account(private_key: str, proxy):
     ua = await db.get_ua(private_key_to_wallet(private_key))
 
-    ua_faker = UserAgent()
     if not ua:
         ua = ua_faker.random
 
