@@ -52,7 +52,7 @@ timeout: int = 10
                     return status, response_json
             except ClientHttpProxyError:
                 logger.error(f"{wallet_address} | Bad proxy: {proxy}")
-                if retries % _ == 1:
+                if retries % 2 == 1:
                     proxies = read_proxies()
                     proxy = choice(proxies[int(len(proxies)/1.5):])
                     logger.error(f"{wallet_address} | Changed proxy: {proxy}")
