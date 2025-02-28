@@ -9,8 +9,8 @@ Quick start
 1. past private keys in `configs/register.txt`
 2. past proxies in `configs/proxies.txt` in format `http://login:password@ip:port`
 3. past ref codes in `configs/REFS.txt`
-4. run `INSTALL.txt`
-5. run `START.txt`
+4. run `INSTALL.bat`
+5. run `START.bat`
 
 After the account is registered, it immediately starts farming, you do not need to restart the soft to start farming, but if you stop it, you need to move the private keys from `results/success.txt` to `configs/farm.txt` and in the `configs/config`: `FARM_MODE = True`
 
