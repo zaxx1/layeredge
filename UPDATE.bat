@@ -1,3 +1,4 @@
-git reset --hard HEAD
-git pull
+git stash
+git pull --rebase
+git stash pop
 pause
