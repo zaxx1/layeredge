@@ -43,3 +43,5 @@ DO_OG_PLEDGE_PASS_HOLD_TASK = False     # Complete the task with OG pass
 
 MINT_FREE_PASS = True                   # Mint free pledge pass. Need ETH to pay transaction fees
 MINT_OG_PASS = False                    # Mint OG pledge pass for 0.0009 ETH
+MIN_DELAY_BETWEEN_ACCOUNTS = 100        # in seconds
+MAX_DELAY_BETWEEN_ACCOUNTS = 600        # in seconds
