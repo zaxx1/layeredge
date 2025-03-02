@@ -1,3 +1,3 @@
+git reset --hard HEAD
 git pull
-INSTALL.bat
 pause

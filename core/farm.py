@@ -19,6 +19,7 @@ async def process_account(private_key: str, proxy):
 
     if not ua:
         ua = ua_faker.random
+        await db.add_account(private_key_to_wallet(private_key), ua)
 
     account = Account(private_key, ua)
     logger.success(f"{account.wallet_address} | Starting account..")
@@ -34,7 +35,7 @@ async def process_account(private_key: str, proxy):
         await asyncio.sleep(randint(10 * 60 * 60, 13 * 60 * 60))
 
 async def start():
-    tasks = []
     for private_key, proxy in zip(PRIVATE_KEYS_TO_FARM, PROXIES):
-        tasks.append(asyncio.create_task(process_account(private_key, proxy)))
-    await asyncio.gather(*tasks)
+        asyncio.create_task(process_account(private_key, proxy))
+        await asyncio.sleep(0.1)
+    await asyncio.sleep(float("inf"))

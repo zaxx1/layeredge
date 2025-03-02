@@ -11,13 +11,14 @@ from core import db
 
 PRIVATE_KEYS_TO_GET_REFS = read_wallets_to_get_refs()
 PROXIES = read_proxies()
+ua_faker = UserAgent()
 
 async def get_referral_code(private_key: str, proxy):
     ua = await db.get_ua(private_key_to_wallet(private_key))
 
-    ua_faker = UserAgent()
     if not ua:
         ua = ua_faker.random
+        await db.add_account(private_key_to_wallet(private_key), ua)
 
     account = Account(private_key, ua)
     logger.success(f"{account.wallet_address} | Starting to get referral codes..")
