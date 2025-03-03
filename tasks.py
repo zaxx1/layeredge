@@ -45,6 +45,7 @@ async def complete_tasks(private_key: str, proxy):
         await asyncio.sleep(10, 30)
 
 async def start():
+    await db.create_database()
     tasks = []
     for private_key, proxy in zip(PRIVATE_KEYS_TO_COMPLETE_TASKS, PROXIES):
         task = asyncio.create_task(complete_tasks(private_key, proxy))

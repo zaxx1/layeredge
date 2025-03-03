@@ -35,6 +35,7 @@ async def get_referral_code(private_key: str, proxy):
 
 
 async def start():
+    await db.create_database()
     tasks = []
     for private_key, proxy in zip(PRIVATE_KEYS_TO_GET_REFS, PROXIES):
         tasks.append(asyncio.create_task(get_referral_code(private_key, proxy)))
