@@ -93,9 +93,13 @@ ref_code: str
     )
 
     if response_status < 300:
-        write_success_account(private_key)
-        await db.add_account(wallet_address, user_agent)
-        logger.success(f"{wallet_address} | Successfully register account")
+        try:
+            write_success_account(private_key)
+            await db.add_account(wallet_address, user_agent)
+            logger.success(f"{wallet_address} | Successfully register account")
+        except:
+            logger.info(f"{wallet_address} | Wallet already registered")
+            return True
         return True
     else:
         write_failed_account(private_key)
