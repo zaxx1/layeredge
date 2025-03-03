@@ -7,10 +7,11 @@ from web3.eth.eth import ChecksumAddress
 from configs.config import MAX_DELAY_BETWEEN_ACCOUNTS
 from utils.log_utils import logger
 from utils.file_utils import read_json, read_wallets_to_mint_nft, write_success_mint, write_failed_mint
+from utils.private_key_to_wallet import private_key_to_wallet
 from core.account import Account
 from configs import config
 
-w3 = AsyncWeb3(provider=AsyncHTTPProvider(endpoint_uri="https://base-pokt.nodies.app"))
+w3 = AsyncWeb3(provider=AsyncHTTPProvider(endpoint_uri="https://mainnet.base.org"))
 
 CONTRACT_ADDRESS = "0xb06C68C8f9DE60107eAbda0D7567743967113360"
 PRIVATE_KEYS_TO_MINT = read_wallets_to_mint_nft()
@@ -34,7 +35,7 @@ async def send_txn(txn: dict, account, func: str | None = None):
     try:
         signed_txn = w3.eth.account.sign_transaction(txn, account.private_key)
         txn_hash = await w3.eth.send_raw_transaction(signed_txn.raw_transaction)
-        logger.info(f"{account.wallet_address} | {func} | {txn_hash.hex()}")
+        logger.success(f"{account.wallet_address} | {func} | {txn_hash.hex()}")
         write_success_mint(account.private_key)
     except Exception as error:
         logger.error(f"{account.wallet_address} | {func} | {error}")
@@ -52,28 +53,32 @@ wallet_address: str | ChecksumAddress
 
 
 async def mint_nft(private_key, is_free=True):
-    nft_type = 1
-    func = "Mint free pass"
-    if not is_free:
-        nft_type = 2
-        func = "Mint OG pass"
+    try:
+        nft_type = 1
+        func = "Mint free pass"
+        if not is_free:
+            nft_type = 2
+            func = "Mint OG pass"
 
-    account = Account(private_key)
+        account = Account(private_key)
 
-    contract, dict_transaction = await create_contract_and_txn(
-            CONTRACT_ADDRESS,
-            "data/abis/free_mint_abi.json",
-            account.wallet_address)
+        contract, dict_transaction = await create_contract_and_txn(
+                CONTRACT_ADDRESS,
+                "data/abis/free_mint_abi.json",
+                account.wallet_address)
 
-    txn_mint = await contract.functions.mint(
-        nft_type,
-        account.wallet_address
-    ).build_transaction(dict_transaction)
+        if not is_free:
+            dict_transaction['value'] = w3.to_wei('0.000909', 'ether')
 
-    if not is_free:
-        dict_transaction['value'] = w3.to_wei('0.000909', 'ether')
+        txn_mint = await contract.functions.mint(
+            nft_type,
+            account.wallet_address
+        ).build_transaction(dict_transaction)
 
-    await send_txn(txn_mint, account, func)
+        await send_txn(txn_mint, account, func)
+    except Exception as error:
+        logger.error(f"{private_key_to_wallet(private_key)} | error: {error}")
+        write_failed_mint(private_key_to_wallet(private_key))
 
 async def start():
     tasks = []
@@ -83,17 +88,18 @@ async def start():
             tasks.append(task)
             await asyncio.sleep(0.1)
 
-        if config.MINT_OG_PASS:  # TODO
-            # task = asyncio.create_task(mint_nft(private_key, is_free=False))
-            # tasks.append(task)
-            # await asyncio.sleep(0.1)
-            ...
-
-        while tasks:
-            tasks = [task for task in tasks if not task.done()]
-            await asyncio.sleep(5)
+        if config.MINT_OG_PASS:
+            if config.MINT_FREE_PASS:
+                await asyncio.sleep(randint(60, 90))
+            task = asyncio.create_task(mint_nft(private_key, is_free=False))
+            tasks.append(task)
+            await asyncio.sleep(0.1)
 
         await asyncio.sleep(randint(config.MIN_DELAY_BETWEEN_ACCOUNTS, MAX_DELAY_BETWEEN_ACCOUNTS))
+
+    while tasks:
+        tasks = [task for task in tasks if not task.done()]
+        await asyncio.sleep(5)
 
     logger.success(f"All accounts processed!")
 
