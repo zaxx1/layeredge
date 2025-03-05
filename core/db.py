@@ -19,10 +19,13 @@ async def create_database():
         await db.commit()
 
 async def add_account(wallet_address: str, user_agent: str, points: int = 0):
-    async with aiosqlite.connect(DATABASE_PATH) as db:
-        await db.execute("INSERT INTO accounts (wallet_address, user_agent, points) VALUES (?, ?, ?)",
-                         (wallet_address, user_agent, points))
-        await db.commit()
+    try:
+        async with aiosqlite.connect(DATABASE_PATH) as db:
+            await db.execute("INSERT INTO accounts (wallet_address, user_agent, points) VALUES (?, ?, ?)",
+                             (wallet_address, user_agent, points))
+            await db.commit()
+    except:
+        ...
 
 # get all accounts
 async def get_accounts():
@@ -31,33 +34,48 @@ async def get_accounts():
             return await cursor.fetchall()
 
 async def get_ua(wallet_address: str):
-    async with aiosqlite.connect(DATABASE_PATH) as db:
-        async with db.execute("SELECT user_agent FROM accounts WHERE wallet_address = ?", (wallet_address,)) as cursor:
-            res = await cursor.fetchall()
-            if len(res):
-                return res[0][0]
-            else:
-                return None
+    try:
+        async with aiosqlite.connect(DATABASE_PATH) as db:
+            async with db.execute("SELECT user_agent FROM accounts WHERE wallet_address = ?", (wallet_address,)) as cursor:
+                res = await cursor.fetchall()
+                if len(res):
+                    return res[0][0]
+                else:
+                    return None
+    except:
+        return None
 
 async def get_total_points():
-    async with aiosqlite.connect(DATABASE_PATH) as db:
-        async with db.execute("SELECT sum(points) FROM accounts") as cursor:
-            return await cursor.fetchone()
+    try:
+        async with aiosqlite.connect(DATABASE_PATH) as db:
+            async with db.execute("SELECT sum(points) FROM accounts") as cursor:
+                return await cursor.fetchone()
+    except:
+        ...
 
 async def is_address_in_db(wallet_address: str) -> bool:
-    async with aiosqlite.connect(DATABASE_PATH) as db:
-        async with db.execute("SELECT 1 FROM accounts WHERE wallet_address = ?", (wallet_address,)) as cursor:
-            return await cursor.fetchone() is not None
+    try:
+        async with aiosqlite.connect(DATABASE_PATH) as db:
+            async with db.execute("SELECT 1 FROM accounts WHERE wallet_address = ?", (wallet_address,)) as cursor:
+                return await cursor.fetchone() is not None
+    except:
+        ...
 
 async def add_wallets_from_register():
-    private_keys = read_register()
-    ua = UserAgent(os=["Windows", "Linux", "Ubuntu", "Mac OS X"])
+    try:
+        private_keys = read_register()
+        ua = UserAgent(os=["Windows", "Linux", "Ubuntu", "Mac OS X"])
 
-    for private_key in private_keys:
-        if not await is_address_in_db(private_key):
-            await add_account(private_key, ua.random, 0)
+        for private_key in private_keys:
+            if not await is_address_in_db(private_key):
+                await add_account(private_key, ua.random, 0)
+    except:
+        ...
 
 async def update_points(wallet_address: str, new_points: int):
-    async with aiosqlite.connect(DATABASE_PATH) as db:
-        await db.execute("UPDATE accounts SET points = ? WHERE wallet_address = ?", (new_points, wallet_address))
-        await db.commit()
+    try:
+        async with aiosqlite.connect(DATABASE_PATH) as db:
+            await db.execute("UPDATE accounts SET points = ? WHERE wallet_address = ?", (new_points, wallet_address))
+            await db.commit()
+    except:
+        ...
